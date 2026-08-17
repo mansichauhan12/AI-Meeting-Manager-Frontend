@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import {
     LayoutDashboard,
@@ -14,7 +15,11 @@ import {
 
 export default function Sidebar() {
     const location = useLocation();
+    const { id, workspaceId: paramWorkspaceId } = useParams();
     const [user, setUser] = useState(null);
+    
+    // Use either 'id' or 'workspaceId' depending on the current route
+    const currentWorkspaceId = paramWorkspaceId || id;
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -33,15 +38,29 @@ export default function Sidebar() {
             .substring(0, 2);
     };
 
+    const getNavPath = (path) => {
+        if (!currentWorkspaceId) return path;
+        // Prefix with workspace path if it's a workspace-specific route
+        if (path === "/meetings") {
+            return `/workspaces/${currentWorkspaceId}/meetings`;
+        }
+        // Can extend this for /tasks, /dashboard, etc. later when they are workspace-specific
+        return path;
+    };
+
     const navItems = [
-        { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+        { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard, global: true },
+        { name: "Workspace", path: "/workspaces", icon: Users, global: true },
         { name: "Meetings", path: "/meetings", icon: Mic },
         { name: "Tasks", path: "/tasks", icon: CheckSquare },
         { name: "AI Search", path: "/ai-search", icon: Sparkles },
         { name: "Calendar", path: "/calendar", icon: Calendar },
-        { name: "Workspace", path: "/workspaces", icon: Users },
         { name: "Settings", path: "/settings", icon: Settings },
     ];
+
+    const visibleNavItems = navItems.filter(item => 
+        currentWorkspaceId ? true : item.global
+    );
 
     return (
         <aside className="w-[260px] bg-[#111111] text-white flex flex-col flex-shrink-0 h-full border-r border-[#1C1C1C]">
@@ -61,12 +80,13 @@ export default function Sidebar() {
                     WORKSPACE
                 </div>
                 <nav className="flex flex-col gap-1">
-                    {navItems.map((item) => {
-                        const isActive = location.pathname.startsWith(item.path);
+                    {visibleNavItems.map((item) => {
+                        const targetPath = getNavPath(item.path);
+                        const isActive = location.pathname.startsWith(targetPath) || location.pathname.startsWith(item.path);
                         return (
                             <Link
                                 key={item.path}
-                                to={item.path}
+                                to={targetPath}
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
                                     isActive
                                         ? "bg-white text-black font-semibold"

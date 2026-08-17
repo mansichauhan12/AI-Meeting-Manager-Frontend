@@ -10,6 +10,11 @@ import WorkspaceList from "./pages/Workspace/WorkspaceList";
 import WorkspaceDetails from "./pages/Workspace/WorkspaceDetails";
 import AppLayout from "./components/AppLayout";
 
+// Meeting Pages
+import MeetingList from "./pages/Meetings/MeetingList";
+import UploadMeeting from "./pages/Meetings/UploadMeeting";
+import MeetingDetails from "./pages/Meetings/MeetingDetails";
+
 function App() {
   return (
     <div className="App">
@@ -37,6 +42,38 @@ function App() {
               <ProtectedRoute>
                 <AppLayout>
                   <WorkspaceDetails />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Meeting Routes */}
+          <Route
+            path="/workspaces/:workspaceId/meetings"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <MeetingList />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workspaces/:workspaceId/meetings/upload"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <UploadMeeting />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workspaces/:workspaceId/meetings/:meetingId"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <MeetingDetails />
                 </AppLayout>
               </ProtectedRoute>
             }
