@@ -37,19 +37,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a {
+.site-shell a {
   color: inherit;
   text-decoration: none;
 }
 
-button {
+.site-shell button {
   border: 0;
   font: inherit;
   cursor: pointer;
   background: none;
 }
 
-ul {
+.site-shell ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -208,16 +208,16 @@ ul {
   background: var(--orange);
 }
 
-h1,
-h2,
-h3,
-h4,
-p {
+.site-shell h1,
+.site-shell h2,
+.site-shell h3,
+.site-shell h4,
+.site-shell p {
   margin: 0;
 }
 
-h1 em,
-h2 em {
+.site-shell h1 em,
+.site-shell h2 em {
   color: var(--orange);
   font-style: normal;
 }
@@ -283,7 +283,7 @@ h2 em {
   justify-content: flex-start;
 }
 
-h1 {
+.site-shell h1 {
   margin-top: 23px;
   font: 800 clamp(53px, 5.5vw, 79px)/.98 var(--font-display);
   letter-spacing: -.075em;
