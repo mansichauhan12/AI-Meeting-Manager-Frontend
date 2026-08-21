@@ -15,12 +15,15 @@ import MeetingList from "./pages/Meetings/MeetingList";
 import UploadMeeting from "./pages/Meetings/UploadMeeting";
 import MeetingDetails from "./pages/Meetings/MeetingDetails";
 
+import Home from "./pages/Home/Home";
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/workspaces" replace />} />
+          {/* <Route path="/" element={<Navigate to="/workspaces" replace />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Navigate to="/workspaces" replace />} />
@@ -46,7 +49,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* Meeting Routes */}
           <Route
             path="/workspaces/:workspaceId/meetings"
