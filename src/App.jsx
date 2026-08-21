@@ -15,6 +15,9 @@ import MeetingList from "./pages/Meetings/MeetingList";
 import UploadMeeting from "./pages/Meetings/UploadMeeting";
 import MeetingDetails from "./pages/Meetings/MeetingDetails";
 
+// Task Pages
+import ActionItemList from "./pages/ActionItems/ActionItemList";
+
 import Home from "./pages/Home/Home";
 
 function App() {
@@ -77,6 +80,18 @@ function App() {
               <ProtectedRoute>
                 <AppLayout>
                   <MeetingDetails />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Task Routes */}
+          <Route
+            path="/workspaces/:workspaceId/tasks"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <ActionItemList />
                 </AppLayout>
               </ProtectedRoute>
             }

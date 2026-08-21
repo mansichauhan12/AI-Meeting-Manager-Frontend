@@ -41,10 +41,10 @@ export default function Sidebar() {
     const getNavPath = (path) => {
         if (!currentWorkspaceId) return path;
         // Prefix with workspace path if it's a workspace-specific route
-        if (path === "/meetings") {
-            return `/workspaces/${currentWorkspaceId}/meetings`;
+        if (path === "/meetings" || path === "/tasks") {
+            return `/workspaces/${currentWorkspaceId}${path}`;
         }
-        // Can extend this for /tasks, /dashboard, etc. later when they are workspace-specific
+        // Can extend this for /dashboard, etc. later when they are workspace-specific
         return path;
     };
 
