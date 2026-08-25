@@ -36,6 +36,7 @@ export default function ActionItemList() {
                 callAPI("GET", `meetings/?workspace=${workspaceId}`)
             ]);
             console.log("task res", tasksRes);
+            console.log("member res", membersRes);
             if (tasksRes.status === 200) {
                 // If it returns paginated or direct array
                 setActionItems(tasksRes.data.data);
@@ -44,11 +45,14 @@ export default function ActionItemList() {
             }
 
             if (membersRes.ok) {
-                const membersList = membersRes.data || [];
+                const membersList = Array.isArray(membersRes.data) ? membersRes.data : (membersRes.data?.data || []);
                 setMembers(membersList);
 
                 const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-                const currentMember = membersList.find(m => m.user?.id === storedUser.id);
+                const currentMember = membersList.find(m => 
+                    (m.user?.id || m.user) === storedUser.id
+                );
+                
                 if (currentMember) {
                     setCurrentUserRole(currentMember.role);
                 }
@@ -91,6 +95,7 @@ export default function ActionItemList() {
     };
 
     const canEdit = (item) => {
+        console.log("edit item", item);
         if (!currentUserRole || !currentUser) return false;
         if (currentUserRole.toUpperCase() === "OWNER" || currentUserRole.toUpperCase() === "ADMIN") return true;
         return item.assigned_to === currentUser.id || item.assigned_to?.id === currentUser.id;
@@ -247,6 +252,7 @@ export default function ActionItemList() {
                 meetings={meetings}
                 members={members}
                 onSuccess={handleSaveSuccess}
+                workspaceId={workspaceId}
             />
 
             <DeleteActionItemModal

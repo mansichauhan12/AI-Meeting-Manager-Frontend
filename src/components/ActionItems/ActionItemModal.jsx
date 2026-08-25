@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { X, CheckSquare } from "lucide-react";
 import { toast } from "sonner";
 import callAPI from "../../utils/callAPI";
+import RemindersSection from "./RemindersSection";
 
-export default function ActionItemModal({ isOpen, onClose, actionItem, meetings, members, onSuccess }) {
+export default function ActionItemModal({ isOpen, onClose, actionItem, meetings, members, onSuccess, workspaceId }) {
     const isEditing = !!actionItem;
+    const [activeTab, setActiveTab] = useState("details");
     const [isSaving, setIsSaving] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -16,9 +18,11 @@ export default function ActionItemModal({ isOpen, onClose, actionItem, meetings,
         priority: "MEDIUM",
         status: "PENDING"
     });
-
+    console.log("action item", actionItem);
+    console.log("workspace id", workspaceId)
     useEffect(() => {
         if (isOpen) {
+            setActiveTab("details"); // reset tab on open
             if (actionItem) {
                 // Determine how assigned_to is represented (object or ID)
                 let assignedId = "";
@@ -142,136 +146,165 @@ export default function ActionItemModal({ isOpen, onClose, actionItem, meetings,
                     </button>
                 </div>
 
+                {isEditing && (
+                    <div className="flex px-8 border-b border-gray-100 bg-white">
+                        <button
+                            onClick={() => setActiveTab("details")}
+                            className={`px-4 py-3 font-bold text-sm border-b-2 transition-colors ${activeTab === "details"
+                                ? "border-black text-black"
+                                : "border-transparent text-gray-400 hover:text-gray-600"
+                                }`}
+                        >
+                            Details
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("reminders")}
+                            className={`px-4 py-3 font-bold text-sm border-b-2 transition-colors ${activeTab === "reminders"
+                                ? "border-black text-black"
+                                : "border-transparent text-gray-400 hover:text-gray-600"
+                                }`}
+                        >
+                            Reminders
+                        </button>
+                    </div>
+                )}
+
                 <div className="p-8 overflow-y-auto">
-                    <form id="actionItemForm" onSubmit={handleSubmit} className="space-y-5">
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Meeting</label>
-                            <select
-                                name="meeting"
-                                value={formData.meeting}
-                                onChange={handleChange}
-                                className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
-                                required
-                            >
-                                <option value="">Select a Meeting</option>
-                                {meetings?.map(m => (
-                                    <option key={m.id} value={m.id}>
-                                        {m.title || `Meeting #${m.id}`}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Title</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                placeholder="E.g., Prepare Q3 presentation"
-                                className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
-                            <textarea
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                placeholder="Add more details about this task..."
-                                rows="3"
-                                className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium resize-none"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-5">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Status</label>
-                                <select
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
-                                >
-                                    <option value="PENDING">Pending</option>
-                                    <option value="IN_PROGRESS">In Progress</option>
-                                    <option value="DONE">Done</option>
-                                </select>
-                            </div>
+                    {activeTab === "details" ? (
+                        <form id="actionItemForm" onSubmit={handleSubmit} className="space-y-5">
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Priority</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Meeting</label>
                                 <select
-                                    name="priority"
-                                    value={formData.priority}
+                                    name="meeting"
+                                    value={formData.meeting}
                                     onChange={handleChange}
                                     className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
+                                    required
                                 >
-                                    <option value="LOW">Low</option>
-                                    <option value="MEDIUM">Medium</option>
-                                    <option value="HIGH">High</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-5">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Assign To</label>
-                                <select
-                                    name="assigned_to"
-                                    value={formData.assigned_to}
-                                    onChange={handleChange}
-                                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
-                                >
-                                    <option value="">Unassigned</option>
-                                    {members.map(member => (
-                                        <option key={member.id} value={member.user?.id || member.id}>
-                                            {member.user?.email || member.name || "Member"}
+                                    <option value="">Select a Meeting</option>
+                                    {meetings?.map(m => (
+                                        <option key={m.id} value={m.id}>
+                                            {m.title || `Meeting #${m.id}`}
                                         </option>
                                     ))}
                                 </select>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Deadline</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Title</label>
                                 <input
-                                    type="date"
-                                    name="deadline"
-                                    value={formData.deadline}
+                                    type="text"
+                                    name="title"
+                                    value={formData.title}
                                     onChange={handleChange}
+                                    placeholder="E.g., Prepare Q3 presentation"
                                     className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium"
+                                    required
                                 />
                             </div>
-                        </div>
 
-                    </form>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    placeholder="Add more details about this task..."
+                                    rows="3"
+                                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium resize-none"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-5">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Status</label>
+                                    <select
+                                        name="status"
+                                        value={formData.status}
+                                        onChange={handleChange}
+                                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
+                                    >
+                                        <option value="PENDING">Pending</option>
+                                        <option value="IN_PROGRESS">In Progress</option>
+                                        <option value="DONE">Done</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Priority</label>
+                                    <select
+                                        name="priority"
+                                        value={formData.priority}
+                                        onChange={handleChange}
+                                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
+                                    >
+                                        <option value="LOW">Low</option>
+                                        <option value="MEDIUM">Medium</option>
+                                        <option value="HIGH">High</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-5">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Assign To</label>
+                                    <select
+                                        name="assigned_to"
+                                        value={formData.assigned_to}
+                                        onChange={handleChange}
+                                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium appearance-none"
+                                    >
+                                        <option value="">Unassigned</option>
+                                        {members.map(member => (
+                                            <option key={member.id} value={member.user?.id || member.id}>
+                                                {member.user?.email || member.name || "Member"}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Deadline</label>
+                                    <input
+                                        type="date"
+                                        name="deadline"
+                                        value={formData.deadline}
+                                        onChange={handleChange}
+                                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all font-medium"
+                                    />
+                                </div>
+                            </div>
+
+                        </form>
+                    ) : (
+                        <RemindersSection actionItem={actionItem} workspaceId={workspaceId} />
+                    )}
                 </div>
 
-                <div className="px-8 py-5 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3 flex-shrink-0">
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        disabled={isSaving}
-                        className="px-6 py-2.5 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        form="actionItemForm"
-                        disabled={isSaving}
-                        className="px-6 py-2.5 rounded-xl font-bold text-white bg-black hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center gap-2"
-                    >
-                        {isSaving && (
-                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        )}
-                        {isSaving ? 'Saving...' : (isEditing ? 'Save Changes' : 'Create Task')}
-                    </button>
-                </div>
+                {activeTab === "details" && (
+                    <div className="px-8 py-5 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3 flex-shrink-0">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            disabled={isSaving}
+                            className="px-6 py-2.5 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            form="actionItemForm"
+                            disabled={isSaving}
+                            className="px-6 py-2.5 rounded-xl font-bold text-white bg-black hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center gap-2"
+                        >
+                            {isSaving && (
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            )}
+                            {isSaving ? 'Saving...' : (isEditing ? 'Save Changes' : 'Create Task')}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
