@@ -18,6 +18,9 @@ import MeetingDetails from "./pages/Meetings/MeetingDetails";
 // Task Pages
 import ActionItemList from "./pages/ActionItems/ActionItemList";
 
+// Search Pages
+import AISearch from "./pages/AISearch/AISearch";
+
 import Home from "./pages/Home/Home";
 
 function App() {
@@ -92,6 +95,18 @@ function App() {
               <ProtectedRoute>
                 <AppLayout>
                   <ActionItemList />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* AI Search Routes */}
+          <Route
+            path="/workspaces/:workspaceId/ai-search"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <AISearch />
                 </AppLayout>
               </ProtectedRoute>
             }
