@@ -52,7 +52,7 @@ export default function AuthLayout({ children, eyebrow = "AUTHENTICATION" }) {
             </div>
 
             {/* RIGHT: Brand visual column */}
-            <div className="hidden lg:flex lg:w-1/2 relative bg-[#0A0A0A] overflow-hidden flex-col justify-end p-12 lg:p-16">
+            <div className="hidden lg:flex lg:w-1/2 relative bg-[#0A0A0A] overflow-hidden flex-col justify-end p-12 lg:p-16 lg:sticky lg:top-0 lg:h-screen">
                 {/* Hero image */}
                 <img
                     src={HERO_IMAGE}
