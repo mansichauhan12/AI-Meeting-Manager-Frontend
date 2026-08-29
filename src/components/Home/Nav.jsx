@@ -81,7 +81,7 @@ export function Nav() {
                     Log in
                 </Link>
 
-                <Link className="button button-dark button-small" to="/register">
+                <Link className="button button-dark button-small !text-white" to="/register">
                     Get started
                     <ArrowRight size={15} />
                 </Link>
