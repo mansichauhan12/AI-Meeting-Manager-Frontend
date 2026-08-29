@@ -10,14 +10,15 @@ export default function DeleteWorkspaceModal({ isOpen, onClose, onSuccess, works
 
     const handleDelete = async () => {
         setIsLoading(true);
-        const { ok } = await callAPI("DELETE", `workspaces/${workspace.id}/`);
+        const response = await callAPI("DELETE", `workspaces/${workspace.id}/`);
+        console.log("response", response);
         setIsLoading(false);
 
-        if (ok) {
+        if (response.status === 204) {
             toast.success("Workspace deleted successfully!");
             onSuccess();
         } else {
-            toast.error("Failed to delete workspace.");
+            toast.error(response.data.detail || "Failed to delete workspace.");
             onClose();
         }
     };
@@ -28,15 +29,15 @@ export default function DeleteWorkspaceModal({ isOpen, onClose, onSuccess, works
                 <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
                     <AlertTriangle className="w-8 h-8" />
                 </div>
-                
+
                 <h2 className="font-[Bricolage_Grotesque,sans-serif] text-2xl font-bold text-gray-900 mb-2">
                     Delete Workspace?
                 </h2>
-                
+
                 <p className="text-gray-500 mb-8">
                     Are you sure you want to delete <strong className="text-gray-900">{workspace.name}</strong>? This action cannot be undone and all data will be lost.
                 </p>
-                
+
                 <div className="flex gap-3">
                     <button
                         onClick={onClose}

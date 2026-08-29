@@ -22,7 +22,7 @@ export default function WorkspaceDetails() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-    
+
     const [selectedMember, setSelectedMember] = useState(null);
     const [isChangeRoleModalOpen, setIsChangeRoleModalOpen] = useState(false);
 
@@ -36,23 +36,25 @@ export default function WorkspaceDetails() {
             callAPI("GET", `workspaces/${id}/`),
             callAPI("GET", `workspaces/${id}/members/`)
         ]);
+        console.log("member response", membersResponse);
+        console.log("workspaceresponse", wsResponse);
 
-        if (wsResponse.ok) {
+        if (wsResponse.status === 200) {
             setWorkspace(wsResponse.data.data);
         } else {
             toast.error("Failed to load workspace details.");
             navigate("/workspaces");
         }
 
-        if (membersResponse.ok) {
+        if (membersResponse.status === 200) {
             setMembers(membersResponse.data);
         }
-        
+
         setIsLoading(false);
     };
 
     const handleRemoveMember = async (member) => {
-        if (!confirm(`Are you sure you want to remove ${member.user?.email} from the workspace?`)) return;
+        if (!confirm(`Are you sure you want to remove ${member.user_email} from the workspace?`)) return;
 
         const { ok } = await callAPI("DELETE", `workspaces/members/${member.id}/`);
         if (ok) {
@@ -92,21 +94,19 @@ export default function WorkspaceDetails() {
             <div className="flex gap-2 p-1 bg-white border border-gray-200 rounded-xl w-fit mb-8 shadow-sm">
                 <button
                     onClick={() => setActiveTab("overview")}
-                    className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all ${
-                        activeTab === "overview"
-                            ? "bg-black text-white shadow-sm"
-                            : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                    }`}
+                    className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all ${activeTab === "overview"
+                        ? "bg-black text-white shadow-sm"
+                        : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                        }`}
                 >
                     Overview
                 </button>
                 <button
                     onClick={() => setActiveTab("members")}
-                    className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all ${
-                        activeTab === "members"
-                            ? "bg-black text-white shadow-sm"
-                            : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                    }`}
+                    className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all ${activeTab === "members"
+                        ? "bg-black text-white shadow-sm"
+                        : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                        }`}
                 >
                     Members
                 </button>
@@ -124,14 +124,14 @@ export default function WorkspaceDetails() {
                                 {workspace.description || "No description provided."}
                             </p>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-8 mb-10">
                             <div>
                                 <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">
                                     Owner
                                 </h3>
                                 <p className="text-gray-900 font-bold">
-                                    {workspace.owner_name || "Unknown"}
+                                    {workspace.owner || "Unknown"}
                                 </p>
                             </div>
                             <div>
@@ -145,7 +145,7 @@ export default function WorkspaceDetails() {
                                 </p>
                             </div>
                         </div>
-                        
+
                         <div className="flex gap-4 pt-8 border-t border-gray-100">
                             <button
                                 onClick={() => setIsEditModalOpen(true)}
@@ -179,7 +179,7 @@ export default function WorkspaceDetails() {
                                 Invite Member
                             </button>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {members.map(member => (
                                 <MemberCard
@@ -203,21 +203,21 @@ export default function WorkspaceDetails() {
                 workspace={workspace}
                 onSuccess={(data) => setWorkspace(data)}
             />
-            
+
             <DeleteWorkspaceModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
                 workspace={workspace}
                 onSuccess={() => navigate("/workspaces")}
             />
-            
+
             <InviteMemberModal
                 isOpen={isInviteModalOpen}
                 onClose={() => setIsInviteModalOpen(false)}
                 workspaceId={workspace.id}
                 onSuccess={(newMember) => setMembers([...members, newMember])}
             />
-            
+
             <ChangeRoleModal
                 isOpen={isChangeRoleModalOpen}
                 onClose={() => setIsChangeRoleModalOpen(false)}

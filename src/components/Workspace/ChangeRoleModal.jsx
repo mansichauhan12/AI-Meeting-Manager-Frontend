@@ -6,6 +6,7 @@ import callAPI from "../../utils/callAPI";
 export default function ChangeRoleModal({ isOpen, onClose, onSuccess, member }) {
     const [role, setRole] = useState("MEMBER");
     const [isLoading, setIsLoading] = useState(false);
+    console.log("member", member);
 
     useEffect(() => {
         if (member) {
@@ -17,7 +18,7 @@ export default function ChangeRoleModal({ isOpen, onClose, onSuccess, member }) 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (role === member.role) {
             onClose();
             return;
@@ -54,15 +55,15 @@ export default function ChangeRoleModal({ isOpen, onClose, onSuccess, member }) 
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-                
+
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="mb-6 bg-gray-50 p-4 rounded-xl flex items-center gap-3">
                         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-gray-700 border border-gray-200">
-                            {member.user?.first_name?.charAt(0) || member.user?.email?.charAt(0) || "U"}
+                            {member.user_email.charAt(0).toUpperCase() || "U"}
                         </div>
                         <div>
                             <p className="font-bold text-gray-900 text-sm">
-                                {member.user?.first_name} {member.user?.last_name}
+                                {member.user_email}
                             </p>
                             <p className="text-xs text-gray-500">{member.user?.email}</p>
                         </div>
@@ -72,7 +73,7 @@ export default function ChangeRoleModal({ isOpen, onClose, onSuccess, member }) 
                         <label className="block text-sm font-bold text-gray-700">
                             Select New Role
                         </label>
-                        
+
                         <div className="flex gap-4">
                             <label className={`flex-1 cursor-pointer border-2 rounded-xl p-4 transition-all ${role === "ADMIN" ? "border-[#FF4F00] bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}>
                                 <div className="flex items-center justify-between mb-1">
@@ -84,7 +85,7 @@ export default function ChangeRoleModal({ isOpen, onClose, onSuccess, member }) 
                                 </div>
                                 <p className="text-xs text-gray-500">Can manage workspace and members.</p>
                             </label>
-                            
+
                             <label className={`flex-1 cursor-pointer border-2 rounded-xl p-4 transition-all ${role === "MEMBER" ? "border-[#FF4F00] bg-orange-50" : "border-gray-200 hover:border-gray-300"}`}>
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="font-bold text-gray-900">Member</span>
@@ -97,7 +98,7 @@ export default function ChangeRoleModal({ isOpen, onClose, onSuccess, member }) 
                             </label>
                         </div>
                     </div>
-                    
+
                     <div className="mt-8 flex gap-3">
                         <button
                             type="button"
