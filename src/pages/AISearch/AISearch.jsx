@@ -79,7 +79,7 @@ export default function AISearch() {
                     <div className="bg-gray-100 p-1 rounded-full inline-flex relative">
                         <button
                             onClick={() => setMode("search")}
-                            className={`relative z-10 px-6 py-2 text-sm font-semibold rounded-full transition-colors flex items-center gap-2 ${mode === "search" ? "text-white" : "text-gray-600 hover:text-black"
+                            className={`relative z-10 w-44 py-2 text-sm font-semibold rounded-full transition-colors flex justify-center items-center gap-2 ${mode === "search" ? "text-white" : "text-gray-600 hover:text-black"
                                 }`}
                         >
                             <Search className="w-4 h-4" />
@@ -87,7 +87,7 @@ export default function AISearch() {
                         </button>
                         <button
                             onClick={() => setMode("ask")}
-                            className={`relative z-10 px-6 py-2 text-sm font-semibold rounded-full transition-colors flex items-center gap-2 ${mode === "ask" ? "text-white" : "text-gray-600 hover:text-black"
+                            className={`relative z-10 w-44 py-2 text-sm font-semibold rounded-full transition-colors flex justify-center items-center gap-2 ${mode === "ask" ? "text-white" : "text-gray-600 hover:text-black"
                                 }`}
                         >
                             <MessageSquare className="w-4 h-4" />
@@ -96,7 +96,7 @@ export default function AISearch() {
 
                         {/* Background slider for toggle */}
                         <div
-                            className="absolute top-1 bottom-1 w-1/2 bg-black rounded-full transition-transform duration-300 ease-in-out"
+                            className="absolute top-1 bottom-1 w-44 bg-black rounded-full transition-transform duration-300 ease-in-out"
                             style={{ transform: mode === "search" ? "translateX(0)" : "translateX(100%)" }}
                         ></div>
                     </div>
