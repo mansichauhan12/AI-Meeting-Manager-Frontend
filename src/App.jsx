@@ -21,6 +21,9 @@ import ActionItemList from "./pages/ActionItems/ActionItemList";
 // Search Pages
 import AISearch from "./pages/AISearch/AISearch";
 
+// Dashboard Pages
+import Dashboard from "./pages/Dashboard/Dashboard";
+
 import Home from "./pages/Home/Home";
 
 function App() {
@@ -51,6 +54,16 @@ function App() {
               <ProtectedRoute>
                 <AppLayout>
                   <WorkspaceDetails />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workspaces/:workspaceId/dashboard"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Dashboard />
                 </AppLayout>
               </ProtectedRoute>
             }
