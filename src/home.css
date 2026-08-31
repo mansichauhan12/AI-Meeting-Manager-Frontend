@@ -77,21 +77,25 @@ body {
   box-shadow: 0 8px 20px rgba(22, 16, 11, .12);
 }
 
-.button-dark {
+.button.button-dark,
+a.button-dark {
   color: #fff;
   background: var(--ink);
 }
 
-.button-dark:hover {
+.button.button-dark:hover,
+a.button-dark:hover {
   background: var(--orange);
 }
 
-.button-orange {
+.button.button-orange,
+a.button-orange {
   color: #fff;
   background: var(--orange);
 }
 
-.button-orange:hover {
+.button.button-orange:hover,
+a.button-orange:hover {
   background: #e74205;
 }
 
