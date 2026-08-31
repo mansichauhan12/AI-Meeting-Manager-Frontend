@@ -38,8 +38,8 @@ export default function InviteMemberModal({ isOpen, onClose, onSuccess, workspac
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform transition-all">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 text-left">
+            <div className="bg-white text-gray-900 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform transition-all">
                 <div className="flex justify-between items-center p-6 border-b border-gray-100">
                     <h2 className="font-[Bricolage_Grotesque,sans-serif] text-2xl font-bold text-gray-900">
                         Invite Member
@@ -63,7 +63,7 @@ export default function InviteMemberModal({ isOpen, onClose, onSuccess, workspac
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="colleague@example.com"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all bg-gray-50/50"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all bg-gray-50/50 text-gray-900"
                             />
                         </div>
                         
@@ -74,7 +74,7 @@ export default function InviteMemberModal({ isOpen, onClose, onSuccess, workspac
                             <select
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all bg-gray-50/50 appearance-none"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all bg-gray-50/50 appearance-none text-gray-900"
                             >
                                 <option value="MEMBER">Member</option>
                                 <option value="ADMIN">Admin</option>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import InviteMemberModal from "../Workspace/InviteMemberModal";
 import {
     LayoutDashboard,
     Mic,
@@ -17,6 +19,7 @@ export default function Sidebar() {
     const location = useLocation();
     const { id, workspaceId: paramWorkspaceId } = useParams();
     const [user, setUser] = useState(null);
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
     // Use either 'id' or 'workspaceId' depending on the current route
     const currentWorkspaceId = paramWorkspaceId || id;
@@ -113,7 +116,16 @@ export default function Sidebar() {
                     <p className="text-[#8A8A8A] text-xs leading-relaxed mb-4">
                         Invite your team to unlock shared meeting memory.
                     </p>
-                    <button className="bg-[#FF4F00] hover:bg-[#e64700] text-white text-xs font-bold py-2 px-4 rounded-full transition-colors w-full">
+                    <button 
+                        onClick={() => {
+                            if (currentWorkspaceId) {
+                                setIsInviteModalOpen(true);
+                            } else {
+                                toast.error("Please open a workspace to invite teammates.");
+                            }
+                        }}
+                        className="bg-[#FF4F00] hover:bg-[#e64700] text-white text-xs font-bold py-2 px-4 rounded-full transition-colors w-full"
+                    >
                         Invite teammates
                     </button>
                 </div>
@@ -136,6 +148,13 @@ export default function Sidebar() {
                     <ChevronDown className="w-4 h-4 text-[#8A8A8A] flex-shrink-0" />
                 </div>
             </div>
+
+            <InviteMemberModal
+                isOpen={isInviteModalOpen}
+                onClose={() => setIsInviteModalOpen(false)}
+                workspaceId={currentWorkspaceId}
+                onSuccess={() => {}}
+            />
         </aside>
     );
 }
