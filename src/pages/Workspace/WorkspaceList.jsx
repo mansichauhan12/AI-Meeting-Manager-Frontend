@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import callAPI from "../../utils/callAPI";
@@ -9,6 +10,13 @@ export default function WorkspaceList() {
     const [workspaces, setWorkspaces] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get("q")?.toLowerCase() || "";
+
+    const filteredWorkspaces = workspaces.filter(workspace =>
+        workspace.name.toLowerCase().includes(query) ||
+        (workspace.description && workspace.description.toLowerCase().includes(query))
+    );
 
     useEffect(() => {
         fetchWorkspaces();
@@ -64,9 +72,9 @@ export default function WorkspaceList() {
                         </div>
                     ))}
                 </div>
-            ) : workspaces.length > 0 ? (
+            ) : filteredWorkspaces.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {workspaces.map((workspace) => (
+                    {filteredWorkspaces.map((workspace) => (
                         <WorkspaceCard key={workspace.id} workspace={workspace} />
                     ))}
                 </div>

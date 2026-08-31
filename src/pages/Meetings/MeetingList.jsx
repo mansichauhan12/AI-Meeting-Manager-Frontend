@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 
 import callAPI from '../../utils/callAPI';
 import MeetingStatusBadge from '../../components/Meetings/MeetingStatusBadge';
@@ -8,9 +8,10 @@ import { toast } from 'sonner';
 const MeetingList = () => {
   const { workspaceId } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [meetings, setMeetings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const searchQuery = searchParams.get('q') || '';
 
   const fetchMeetings = async () => {
     setIsLoading(true);
@@ -69,11 +70,19 @@ const MeetingList = () => {
       </div>
 
       <div style={{ marginBottom: '24px' }}>
-        <input
+        {/* <input
           type="text"
           placeholder="Search meetings..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val) {
+              searchParams.set("q", val);
+            } else {
+              searchParams.delete("q");
+            }
+            setSearchParams(searchParams, { replace: true });
+          }}
           style={{
             width: '100%',
             maxWidth: '300px',
@@ -85,7 +94,7 @@ const MeetingList = () => {
             outline: 'none',
             boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
           }}
-        />
+        /> */}
       </div>
 
       {isLoading ? (

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Plus, Edit2, Trash2, Clock, CheckCircle2, Circle, CheckSquare } from "lucide-react";
 import { toast } from "sonner";
 import callAPI from "../../utils/callAPI";
@@ -8,7 +8,9 @@ import DeleteActionItemModal from "../../components/ActionItems/DeleteActionItem
 
 export default function ActionItemList() {
     const { workspaceId } = useParams();
+    const [searchParams] = useSearchParams();
     const [actionItems, setActionItems] = useState([]);
+    const query = searchParams.get("q")?.toLowerCase() || "";
     const [members, setMembers] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [currentUserRole, setCurrentUserRole] = useState(null);
@@ -49,10 +51,10 @@ export default function ActionItemList() {
                 setMembers(membersList);
 
                 const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-                const currentMember = membersList.find(m => 
+                const currentMember = membersList.find(m =>
                     (m.user?.id || m.user) === storedUser.id
                 );
-                
+
                 if (currentMember) {
                     setCurrentUserRole(currentMember.role);
                 }
@@ -142,6 +144,11 @@ export default function ActionItemList() {
         );
     }
 
+    const filteredActionItems = actionItems.filter(item =>
+        item.title?.toLowerCase().includes(query) ||
+        item.description?.toLowerCase().includes(query)
+    );
+
     return (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -164,7 +171,7 @@ export default function ActionItemList() {
             </div>
 
             <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                {actionItems.length === 0 ? (
+                {filteredActionItems.length === 0 ? (
                     <div className="p-12 text-center flex flex-col items-center">
                         <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mb-4">
                             <CheckSquare className="w-8 h-8 text-gray-400" />
@@ -193,7 +200,7 @@ export default function ActionItemList() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {actionItems.map((item) => (
+                                {filteredActionItems.map((item) => (
                                     <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="font-bold text-gray-900 mb-1">{item.title}</div>

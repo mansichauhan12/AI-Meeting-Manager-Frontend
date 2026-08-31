@@ -1,13 +1,26 @@
 import { useState, useEffect } from "react";
 import { Search, Bell } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import callAPI from "../../utils/callAPI";
 
 export default function TopNav() {
     const location = useLocation();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [user, setUser] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const query = searchParams.get("q") || "";
+
+    const handleSearchChange = (e) => {
+        const val = e.target.value;
+        if (val) {
+            searchParams.set("q", val);
+        } else {
+            searchParams.delete("q");
+        }
+        setSearchParams(searchParams, { replace: true });
+    };
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -34,7 +47,7 @@ export default function TopNav() {
         localStorage.clear();
         navigate("/login");
     };
-    
+
     // Determine the title based on the route
     let pageTitle = "Dashboard";
     if (location.pathname.startsWith("/workspaces")) {
@@ -61,6 +74,8 @@ export default function TopNav() {
                     </div>
                     <input
                         type="text"
+                        value={query}
+                        onChange={handleSearchChange}
                         placeholder="Search meetings, tasks, people..."
                         className="w-full bg-white border border-gray-200 text-sm rounded-full py-2.5 pl-10 pr-12 focus:outline-none focus:ring-2 focus:ring-[#FF4F00]/20 focus:border-[#FF4F00] transition-all shadow-sm"
                     />
@@ -77,18 +92,18 @@ export default function TopNav() {
                     <Bell className="w-5 h-5" />
                     <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF4F00] rounded-full border border-[#F6F5F2]"></span>
                 </button>
-                
+
                 <div className="relative">
-                    <div 
+                    <div
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         className="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white font-bold text-sm cursor-pointer shadow-sm hover:ring-2 hover:ring-offset-2 hover:ring-[#FF4F00] hover:ring-offset-[#F6F5F2] transition-all"
                     >
                         {getInitials(user?.full_name)}
                     </div>
-                    
+
                     {isDropdownOpen && (
                         <>
-                            <div 
+                            <div
                                 className="fixed inset-0 z-40"
                                 onClick={() => setIsDropdownOpen(false)}
                             ></div>
