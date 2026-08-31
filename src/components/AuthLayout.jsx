@@ -1,4 +1,5 @@
 import { Sparkles, Search, CheckCircle2, Waves } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HERO_IMAGE =
     "https://images.pexels.com/photos/35696867/pexels-photo-35696867.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080&w=1920";
@@ -14,14 +15,14 @@ export default function AuthLayout({ children, eyebrow = "AUTHENTICATION" }) {
             {/* LEFT: Form column */}
             <div className="w-full lg:w-1/2 flex flex-col px-6 sm:px-12 lg:px-20 py-8 lg:py-12 relative z-10 min-h-screen">
                 {/* Brand mark */}
-                <div className="flex items-center gap-2.5" data-testid="brand-mark">
+                <Link to="/" className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity" data-testid="brand-mark">
                     <div className="h-9 w-9 rounded-lg bg-[#0A0A0A] flex items-center justify-center">
                         <div className="h-3 w-3 bg-[#FF4F00] rounded-sm rotate-45" />
                     </div>
                     <span className="font-[Bricolage_Grotesque,sans-serif] text-xl font-black tracking-tighter">
                         MeetMind
                     </span>
-                </div>
+                </Link>
 
                 {/* Form area */}
                 <div className="flex-1 flex flex-col justify-center py-10">

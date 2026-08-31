@@ -17,7 +17,7 @@ export default function Sidebar() {
     const location = useLocation();
     const { id, workspaceId: paramWorkspaceId } = useParams();
     const [user, setUser] = useState(null);
-    
+
     // Use either 'id' or 'workspaceId' depending on the current route
     const currentWorkspaceId = paramWorkspaceId || id;
 
@@ -54,11 +54,11 @@ export default function Sidebar() {
         { name: "Meetings", path: "/meetings", icon: Mic },
         { name: "Tasks", path: "/tasks", icon: CheckSquare },
         { name: "AI Search", path: "/ai-search", icon: Sparkles },
-        { name: "Calendar", path: "/calendar", icon: Calendar },
-        { name: "Settings", path: "/settings", icon: Settings },
+        // { name: "Calendar", path: "/calendar", icon: Calendar },
+        // { name: "Settings", path: "/settings", icon: Settings },
     ];
 
-    const visibleNavItems = navItems.filter(item => 
+    const visibleNavItems = navItems.filter(item =>
         currentWorkspaceId ? true : item.global
     );
 
@@ -66,12 +66,12 @@ export default function Sidebar() {
         <aside className="w-[260px] bg-[#111111] text-white flex flex-col flex-shrink-0 h-full border-r border-[#1C1C1C]">
             {/* Logo Area */}
             <div className="h-[72px] flex items-center px-6">
-                <div className="flex items-center gap-3">
+                <Link to="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                     <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#FF4F00]">
                         <Hexagon className="w-5 h-5 fill-current" />
                     </div>
                     <span className="font-bold text-lg tracking-wide text-white">MeetMind</span>
-                </div>
+                </Link>
             </div>
 
             {/* Navigation */}
@@ -87,16 +87,14 @@ export default function Sidebar() {
                             <Link
                                 key={item.path}
                                 to={targetPath}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
-                                    isActive
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${isActive
                                         ? "bg-white text-black font-semibold"
                                         : "text-[#8A8A8A] hover:text-white hover:bg-white/5"
-                                }`}
+                                    }`}
                             >
                                 <item.icon
-                                    className={`w-[18px] h-[18px] ${
-                                        isActive ? "text-[#FF4F00]" : "text-[#8A8A8A]"
-                                    }`}
+                                    className={`w-[18px] h-[18px] ${isActive ? "text-[#FF4F00]" : "text-[#8A8A8A]"
+                                        }`}
                                 />
                                 <span className="text-sm font-medium">{item.name}</span>
                                 {isActive && (
