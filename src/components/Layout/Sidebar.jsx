@@ -52,7 +52,7 @@ export default function Sidebar() {
     };
 
     const navItems = [
-        { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard, global: true },
+        { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
         { name: "Workspace", path: "/workspaces", icon: Users, global: true },
         { name: "Meetings", path: "/meetings", icon: Mic },
         { name: "Tasks", path: "/tasks", icon: CheckSquare },
